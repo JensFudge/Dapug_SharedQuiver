@@ -5,7 +5,10 @@ uses
   uMainForm in 'uMainForm.pas' {Form1},
   uAppSettings in 'uAppSettings.pas',
   uDBController in 'uDBController.pas' {dbController: TDataModule},
-  uCustomerClass in 'uCustomerClass.pas';
+  uCustomerClasses in 'uCustomerClasses.pas',
+  uCustomerService in 'uCustomerService.pas',
+  uCustomerServiceImplementation in 'uCustomerServiceImplementation.pas',
+  uDBCustomer in 'uDBCustomer.pas';
 
 {$R *.res}
 
