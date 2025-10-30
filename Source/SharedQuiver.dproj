@@ -135,7 +135,10 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="uCustomerClass.pas"/>
+        <DCCReference Include="uCustomerClasses.pas"/>
+        <DCCReference Include="uCustomerService.pas"/>
+        <DCCReference Include="uCustomerServiceImplementation.pas"/>
+        <DCCReference Include="uDBCustomer.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
