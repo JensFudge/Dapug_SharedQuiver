@@ -9,6 +9,7 @@ uses
 type
   TForm1 = class(TForm)
     Button1: TButton;
+    ListBox1: TListBox;
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
@@ -24,19 +25,35 @@ implementation
 {$R *.dfm}
 
 uses
-  uDBController, FireDAC.Comp.Client;
+  uCustomerService, uCustomerServiceImplementation,
+  uCustomerClasses,
+  FireDAC.Comp.Client;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-   var  lQry := TdbController.Shared.GetQuery;
-   try
-     lQry.SQL.Add('SELECT * FROM CUSTOMER');
-     lQry.Open;
-     showMessage(lQry.Fields[0].FieldName);
-   finally
-     TdbController.Shared.ReturnConnectionToPool(lQry);
-   end;
+  var lService : ICustomerService;
+  lService := TCustomerService.Create;
 
+  //var lCustomers := TCustomers.Create;
+  //lService.GetCustomers(lCustomers) ;
+
+  var lCustomers := lService.GetCustomers;
+
+  try
+    for var lCustomer in lCustomers do
+    begin
+      ListBox1.Items.Add(lCustomer.ToDebugString);
+
+    end;
+  finally
+
+    lCustomers.Clear;
+    lCustomers.Free;
+
+  end;
 end;
+
+
+
 
 end.
