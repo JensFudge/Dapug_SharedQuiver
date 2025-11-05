@@ -33,36 +33,37 @@ ALTER TABLE CUSTOMER ADD CONSTRAINT PK_CUSTOMER PRIMARY KEY (CUST_NO);
   TCustomer = class(TObject)
   private
     FCustNo: Integer;
-    FPostalCode: string;
-    FAddressLine2: string;
-    FCustomer: string;
-    FAddressLine1: string;
-    FCountry: string;
-    FStateProvince: string;
-    FContactFirst: string;
-    FPhoneNo: string;
+    FCompany: string;
+    FAddr1: string;
+    FAddr2: string;
     FCity: string;
-    FContactLast: string;
-    FOnHold: string;
+    FState: string;
+    FZip: string;
+    FCountry: string;
+    FPhone: string;
+    FFax: string;
+    FTaxRate: Double;
+    FContact: string;
+    FLastInvoiceDate: TDateTime;
   public
     constructor Create; virtual;
     procedure Clear; virtual;
 
 
     // Properties
-    property CustNo: Integer read FCustNo write FCustNo;
-    property Customer: string read FCustomer write FCustomer;
-
-    property ContactFirst: string read FContactFirst write FContactFirst;
-    property ContactLast : string read FContactLast  write FContactLast;
-    property PhoneNo     : string read FPhoneNo      write FPhoneNo;
-    property AddressLine1: string read FAddressLine1 write FAddressLine1;
-    property AddressLine2: string read FAddressLine2 write FAddressLine2;
-    property City        : string read FCity         write FCity;
-    property StateProvince: string read FStateProvince write FStateProvince;
-    property Country     : string read FCountry      write FCountry;
-    property PostalCode  : string read FPostalCode   write FPostalCode;
-    property OnHold      : string read FOnHold       write FOnHold;
+     property CustNo: Integer read FCustNo write FCustNo;
+    property Company: string read FCompany write FCompany;
+    property Addr1: string read FAddr1 write FAddr1;
+    property Addr2: string read FAddr2 write FAddr2;
+    property City: string read FCity write FCity;
+    property State: string read FState write FState;
+    property Zip: string read FZip write FZip;
+    property Country: string read FCountry write FCountry;
+    property Phone: string read FPhone write FPhone;
+    property Fax: string read FFax write FFax;
+    property TaxRate: Double read FTaxRate write FTaxRate;
+    property Contact: string read FContact write FContact;
+    property LastInvoiceDate: TDateTime read FLastInvoiceDate write FLastInvoiceDate;
     function ToDebugString: string;
 
 
@@ -70,6 +71,9 @@ ALTER TABLE CUSTOMER ADD CONSTRAINT PK_CUSTOMER PRIMARY KEY (CUST_NO);
 
 
   TCustomers = class(TObjectList<TCustomer>)
+
+  Constructor Create; reintroduce;
+  Destructor Destroy; override;
   end;
 
 implementation
@@ -81,18 +85,19 @@ uses
 
 procedure TCustomer.Clear;
 begin
-  FCustNo        := 0;
-  FCustomer      := '';
-  FContactFirst  := '';
-  FContactLast   := '';
-  FPhoneNo       := '';
-  FAddressLine1  := '';
-  FAddressLine2  := '';
-  FCity          := '';
-  FStateProvince := '';
-  FCountry       := '';
-  FPostalCode    := '';
-  FOnHold        := 'N';
+  FCustNo := 0;
+  FCompany := '';
+  FAddr1 := '';
+  FAddr2 := '';
+  FCity := '';
+  FState := '';
+  FZip := '';
+  FCountry := '';
+  FPhone := '';
+  FFax := '';
+  FTaxRate := 0.0;
+  FContact := '';
+  FLastInvoiceDate := 0; // 0 = not set
 end;
 
 constructor TCustomer.Create;
@@ -103,8 +108,23 @@ end;
 
 function TCustomer.ToDebugString: string;
 begin
-     Result := Format('CustNo=%d, Customer="%s"',
-                   [FCustNo, FCustomer]);
+     Result := Format('CustNo=%d, Company="%s"',
+                   [FCustNo, FCompany]);
+end;
+
+{ TCustomers }
+
+constructor TCustomers.Create;
+begin
+  Inherited Create(true);
+end;
+
+destructor TCustomers.Destroy;
+begin
+  for var lCust in self do
+    begin
+      lCust.Free;
+    end;
 end;
 
 end.

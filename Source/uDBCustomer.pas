@@ -13,7 +13,7 @@ Type
     Class destructor Destroy;
   public
     Class function shared : TDbCustomerService;
-    function LoadCustomersFromDB(aCustomers : TCustomers) : Boolean;
+    function LoadCustomersFromDB(var  aCustomers : TCustomers) : Boolean;
   end;
 
 
@@ -21,19 +21,19 @@ implementation
 
 
 { CREATE TABLE CUSTOMER (
-  CUST_NO           INTEGER NOT NULL,
-  CUSTOMER          VARCHAR(25) NOT NULL,
-  CONTACT_FIRST     VARCHAR(15),
-  CONTACT_LAST      VARCHAR(20),
-  PHONE_NO          VARCHAR(20),
-  ADDRESS_LINE1     VARCHAR(30),
-  ADDRESS_LINE2     VARCHAR(30),
-  CITY              VARCHAR(25),
-  STATE_PROVINCE    VARCHAR(15),
-  COUNTRY           VARCHAR(15),
-  POSTAL_CODE       VARCHAR(12),
-  ON_HOLD           CHAR(1) DEFAULT 'N' NOT NULL}
-
+  CUSTNO           INTEGER NOT NULL,
+  COMPANY          VARCHAR(25) NOT NULL,
+  ADDR1            VARCHAR
+  ADDR2            VARCHAR
+  CITY             VARCHAR
+  STATE            VARCHAR
+  ZIP              VARCHAR
+  COUNTRY          VARCHAR
+  PHONE            VARCHAR
+  FAX              VARCHAR
+  TAXRATE          DOUBLE
+  CONTACT          VARCHAR
+  LASTINVOICEDATE  DATE
 
 { TDBCustomerService }
 
@@ -43,18 +43,30 @@ begin
 end;
 
 function TDBCustomerService.LoadCustomersFromDB(
-  aCustomers: TCustomers): Boolean;
+ var  aCustomers: TCustomers): Boolean;
 begin
     var lQry := TDbController.Shared.GetQuery;
     try
       lQry.SQL.Add('SELECT * FROM CUSTOMER');
+      lQry.Open;
       while not lQry.Eof do
       begin
         var lCustomer := TCustomer.Create;
-        lCustomer.CustNo := lQry.FieldByName('CUST_NO').AsInteger;
-        lCustomer.Customer := lQry.FieldByName('CUSTOMER').AsString;
-        finish this
-
+        lCustomer.CustNo          := lQry.FieldByName('CUSTNO').AsInteger;
+        lCustomer.Company         := lQry.FieldByName('COMPANY').AsString;
+        lCustomer.Addr1           := lQry.FieldByName('ADDR1').AsString;
+        lCustomer.Addr2           := lQry.FieldByName('ADDR2').AsString;
+        lCustomer.City            := lQry.FieldByName('CITY').AsString;
+        lCustomer.State           := lQry.FieldByName('STATE').AsString;
+        lCustomer.Zip             := lQry.FieldByName('ZIP').AsString;
+        lCustomer.Country         := lQry.FieldByName('COUNTRY').AsString;
+        lCustomer.Phone           := lQry.FieldByName('PHONE').AsString;
+        lCustomer.Fax             := lQry.FieldByName('FAX').AsString;
+        lCustomer.TaxRate         := lQry.FieldByName('TAXRATE').AsFloat;
+        lCustomer.Contact         := lQry.FieldByName('CONTACT').AsString;
+        lCustomer.LastInvoiceDate := lQry.FieldByName('LASTINVOICEDATE').AsDateTime;
+        aCustomers.Add(lCustomer);
+        lQry.Next;
       end;
     finally
       TdbController.Shared.ReturnConnectionToPool(lQry);

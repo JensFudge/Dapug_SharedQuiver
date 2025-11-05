@@ -6,8 +6,9 @@ uses
 uCustomerClasses, System.Classes;
 
 Type
-   ICustomerService = interface(IInvokable)
-      function GetCustomers : TCustomers;
+   ICustomerService = interface
+      function GetCustomers : TCustomers; overload;
+      procedure GetCustomers (aCustomers : TCustomers); overload;
    end;
 
 implementation
