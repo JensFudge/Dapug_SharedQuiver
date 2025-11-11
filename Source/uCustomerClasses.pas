@@ -72,8 +72,10 @@ ALTER TABLE CUSTOMER ADD CONSTRAINT PK_CUSTOMER PRIMARY KEY (CUST_NO);
 
   TCustomers = class(TObjectList<TCustomer>)
 
-  Constructor Create; reintroduce;
-  Destructor Destroy; override;
+  end;
+
+  TCustomerDictionary = class(TObjectDictionary<integer, TCustomer>)
+
   end;
 
 implementation
@@ -114,17 +116,5 @@ end;
 
 { TCustomers }
 
-constructor TCustomers.Create;
-begin
-  Inherited Create(true);
-end;
-
-destructor TCustomers.Destroy;
-begin
-  for var lCust in self do
-    begin
-      lCust.Free;
-    end;
-end;
 
 end.

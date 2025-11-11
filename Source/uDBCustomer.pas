@@ -13,7 +13,8 @@ Type
     Class destructor Destroy;
   public
     Class function shared : TDbCustomerService;
-    function LoadCustomersFromDB(var  aCustomers : TCustomers) : Boolean;
+    function LoadCustomersFromDB(var  aCustomers : TCustomers) : Boolean; overload;
+    function LoadCustomersFromDB(var  aCustomers : TCustomerDictionary) : Boolean; overload;
   end;
 
 
@@ -71,6 +72,20 @@ begin
     finally
       TdbController.Shared.ReturnConnectionToPool(lQry);
     end;
+end;
+
+function TDBCustomerService.LoadCustomersFromDB(
+  var aCustomers: TCustomerDictionary): Boolean;
+begin
+
+  var lCustomers := TCustomers.Create(false);
+  try
+    LoadCustomersFromDB(lCustomers);
+    for var lCustomer in lCustomers do
+      aCustomers.Add(lCustomer.CustNo, lCustomer);
+  finally
+    lCustomers.Free;
+  end;
 end;
 
 class function TDBCustomerService.shared: TDbCustomerService;
